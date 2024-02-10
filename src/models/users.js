@@ -12,7 +12,7 @@ module.exports = (sequelize, DataType) => {
       },
       name: {
         type: DataType.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       email: {
         type: DataType.STRING,
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataType) => {
       },
       password: {
         type: DataType.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       isDeleted: {
         type: DataType.INTEGER,
@@ -45,14 +45,6 @@ module.exports = (sequelize, DataType) => {
       role: {
         type: DataType.STRING,
         defaultValue: "USER",
-      },
-      createdBy: {
-        allowNull: false,
-        type: DataType.BIGINT,
-      },
-      updatedBy: {
-        allowNull: false,
-        type: DataType.BIGINT,
       },
       createdAt: {
         allowNull: false,
@@ -77,14 +69,7 @@ module.exports = (sequelize, DataType) => {
           if (user.password) {
             user.password = bcrypt.hashSync(user.password, 8);
           }
-        },
-        beforeBulkUpdate: (user, options) => {
-          user.attributes.updatedAt = Math.floor(Date.now());
-        },
-        beforeBulkCreate: (user, options) => {
-          user.attributes.createdAt = Math.floor(Date.now());
-          user.attributes.updatedAt = Math.floor(Date.now());
-        },
+        }
       },
     }
   );

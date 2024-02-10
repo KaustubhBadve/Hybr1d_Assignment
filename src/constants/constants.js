@@ -26,7 +26,8 @@ module.exports = Object.freeze({
 	},
 	jwt: {
 		SECRET: "secretfortoken",
-		EXPIRE: 86400,
+		EXPIRE_BUYER: 172800,
+		EXPIRE_SELLER: 432000,
 	},
 	STRING_CONSTANTS: {
 		SUCCESS: "Success",
