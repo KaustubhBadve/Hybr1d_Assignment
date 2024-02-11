@@ -10,10 +10,6 @@ module.exports = (sequelize, DataType) => {
         autoIncrement: true,
         type: DataType.BIGINT,
       },
-      sellerId: {
-        type: DataType.BIGINT,
-        allowNull: false,
-      },
       buyerId: {
         type: DataType.BIGINT,
         allowNull: false
@@ -24,7 +20,7 @@ module.exports = (sequelize, DataType) => {
       },
       address: {
         type: DataType.STRING,
-        allowNull: false
+        allowNull: true
       },
       pincode: {
         type: DataType.BIGINT,
@@ -38,7 +34,7 @@ module.exports = (sequelize, DataType) => {
         type: DataType.STRING,
         allowNull: true,
       },
-      isCancled: {
+      isCanceled: {
         type: DataType.INTEGER,
         defaultValue: 0,
       },

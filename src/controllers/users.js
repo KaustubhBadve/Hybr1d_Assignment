@@ -4,6 +4,8 @@ const response = require("../lib/response");
 const constant = require("../constants/constants");
 const query = require("../lib/queries/users");
 const catalogQuery = require("../lib/queries/catalogs");
+const orderQuery = require("../lib/queries/orders");
+const orderMapQuery = require("../lib/queries/orderMappping");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var passwordValidator = require("password-validator");
@@ -338,6 +340,117 @@ exports.getListOfItems = async (req, res) => {
       res,
       null
     );
+  } catch (err) {
+    return response.sendResponse(
+      constant.response_code.INTERNAL_SERVER_ERROR,
+      err.message || constant.STRING_CONSTANTS.SOME_ERROR_OCCURED,
+      null,
+      res
+    );
+  }
+};
+
+exports.createOrder = async (req, res) => {
+  try {
+    let userId = req?.user?.id;
+
+    let errors = await validationResult(req);
+    if (!errors.isEmpty()) {
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    let body = req.body;
+    let orderList = body?.orderList;
+    let user = await query.getUserById(userId);
+
+    if (!user) {
+      errors.errors.push({
+        msg: `User not found with userId: ${userId}`,
+      });
+      return response.sendResponse(
+        constant.response_code.NOT_FOUND,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    if (!orderList || Object.keys(orderList).length === 0) {
+      errors.errors.push({
+        msg: `Please select items and valid quantities`,
+      });
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    const itemIds = Object.keys(orderList);
+
+    const availableIds = await catalogQuery.checkCatalogItemIds(itemIds);
+
+    let totalPrice = 0;
+    for (const itemId of itemIds) {
+      const quantity = orderList[itemId];
+      const item = availableIds.find((item) => item.id === +itemId);
+      if (item) {
+        const price = item?.price;
+        totalPrice += price * quantity;
+      } else {
+        errors.errors.push({
+          msg: `Item with ID ${itemId} not found in the catalog.`,
+          itemId: itemId,
+        });
+      }
+    }
+
+    if (errors.errors.length > 0) {
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    const createOrder = await orderQuery.createOrder({
+      buyerId: userId,
+      totalCartValue: totalPrice,
+      address: body?.address,
+      pincode: body?.pincode,
+      city: body?.city,
+      status: "Scheduled",
+    });
+
+    response.sendResponse(
+      constant.response_code.SUCCESS,
+      constant.STRING_CONSTANTS.SUCCESS,
+      null,
+      res,
+      null
+    );
+    const orderId = createOrder?.id;
+    const orderMappings = Object.keys(orderList).map((itemId) => {
+      return {
+        orderId,
+        itemId,
+        quantity: orderList[itemId],
+      };
+    });
+
+    orderMapQuery.createOrderMappingBulk(orderMappings);
+    return;
   } catch (err) {
     return response.sendResponse(
       constant.response_code.INTERNAL_SERVER_ERROR,

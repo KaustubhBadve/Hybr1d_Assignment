@@ -12,4 +12,10 @@ router.get(
   users.getListOfItems
 );
 
+router.post(
+    "/buyer/orderlist",
+    validateToken("Buyer"),
+    users.createOrder
+  );
+
 module.exports = router;

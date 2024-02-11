@@ -18,8 +18,17 @@ getCatalogsList = async function (sellerId) {
   });
 };
 
+checkCatalogItemIds = async function(itemIds) {
+    return await db[constants.DB.table.CATALOG_MASTER].findAll({
+      where: { id: itemIds },
+      attributes: ["id","price"],
+    });
+};
+
+
 module.exports = {
   createCatalog,
   updateCatalog,
-  getCatalogsList
+  getCatalogsList,
+  checkCatalogItemIds
 };
