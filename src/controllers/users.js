@@ -9,27 +9,19 @@ const orderMapQuery = require("../lib/queries/orderMappping");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var passwordValidator = require("password-validator");
-const schema = new passwordValidator();
+const db = require("../models");
 
 const passswordValidate = (password) => {
+  const schema = new passwordValidator();
   schema
-    .is()
-    .min(6)
-    .is()
-    .max(10)
-    .has()
-    .uppercase()
-    .has()
-    .lowercase()
-    .has()
-    .digits(2)
-    .has()
-    .not()
-    .spaces();
+    .is().min(6)
+    .is().max(15)
+    .has().uppercase()
+    .has().lowercase()
+    .has().digits(2)
+    .has().not().spaces();
 
-  const validationResult = schema.validate(password);
-
-  return validationResult;
+  return schema.validate(password);
 };
 
 exports.userRegistration = async (req, res) => {
@@ -51,7 +43,7 @@ exports.userRegistration = async (req, res) => {
 
     if (!isValidPassword) {
       errors.errors.push({
-        msg: "A minimum of one uppercase and lowercase character, as well as no spaces, are required in the password.",
+        msg: `A minimum of one uppercase and lowercase character, as well as no spaces, are required in the password.`,
       });
       return response.sendResponse(
         constant.response_code.BAD_REQUEST,
@@ -69,7 +61,7 @@ exports.userRegistration = async (req, res) => {
         msg: `User already exists with mobileNo ${body.mobileNo}`,
       });
       return response.sendResponse(
-        constant.response_code.NOT_FOUND,
+        constant.response_code.BAD_REQUEST,
         null,
         null,
         res,
@@ -118,14 +110,14 @@ exports.userLogin = async (req, res) => {
 
     const body = req.body;
 
-    let user = await query.getUserByMobileNo(body.mobileNo);
+    let user = await query.getUserByMobileNo(body?.mobileNo);
 
     if (!user) {
       errors.errors.push({
-        msg: `User not found with mobileNo ${body.mobileNo}`,
+        msg: `User not found with mobileNo ${body?.mobileNo}`,
       });
       return response.sendResponse(
-        constant.response_code.NOT_FOUND,
+        constant.response_code.BAD_REQUEST,
         null,
         null,
         res,
@@ -219,7 +211,7 @@ exports.sellerList = async (req, res) => {
 
     if (!userList) {
       errors.errors.push({
-        msg: `"Currently, there are no sellers available. Please try again later`,
+        msg: `Currently, there are no sellers available. Please try again later`,
       });
       return response.sendResponse(
         constant.response_code.NOT_FOUND,
@@ -303,14 +295,14 @@ exports.getListOfItems = async (req, res) => {
       );
     }
 
-    let user = await query.getUserById(userId);
+    let user = await query.getUserByIdForBuyer(userId);
 
     if (!user) {
       errors.errors.push({
-        msg: `User not found with userId: ${userId}`,
+        msg: `Seller not found with userId: ${userId}`,
       });
       return response.sendResponse(
-        constant.response_code.NOT_FOUND,
+        constant.response_code.BAD_REQUEST,
         null,
         null,
         res,
@@ -374,7 +366,7 @@ exports.createOrder = async (req, res) => {
         msg: `User not found with userId: ${userId}`,
       });
       return response.sendResponse(
-        constant.response_code.NOT_FOUND,
+        constant.response_code.BAD_REQUEST,
         null,
         null,
         res,
@@ -437,6 +429,88 @@ exports.createOrder = async (req, res) => {
       constant.response_code.SUCCESS,
       constant.STRING_CONSTANTS.SUCCESS,
       null,
+      res,
+      null
+    );
+    const orderId = createOrder?.id;
+    const orderMappings = Object.keys(orderList).map((itemId) => {
+      return {
+        orderId,
+        itemId,
+        quantity: orderList[itemId],
+      };
+    });
+
+    orderMapQuery.createOrderMappingBulk(orderMappings);
+    return;
+  } catch (err) {
+    return response.sendResponse(
+      constant.response_code.INTERNAL_SERVER_ERROR,
+      err.message || constant.STRING_CONSTANTS.SOME_ERROR_OCCURED,
+      null,
+      res
+    );
+  }
+};
+
+exports.fetchOrdersForBuyers = async (req, res) => {
+  try {
+    let userId = req?.user?.id;
+
+    let errors = await validationResult(req);
+    if (!errors.isEmpty()) {
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    let user = await query.getUserById(userId);
+
+    if (!user) {
+      errors.errors.push({
+        msg: `User not found with userId: ${userId}`,
+      });
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    let orderData = await db.sequelize.query(
+      `call getOrderDetailsAgainstBuyer(:userId)`,
+      {
+        replacements: {
+         userId
+        },
+      }
+    );
+
+    orderData=orderData?.length ? orderData[0]?.data : null;
+
+    if(!orderData){
+      errors.errors.push({
+        msg: `Currently no order available`,
+      });
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    response.sendResponse(
+      constant.response_code.SUCCESS,
+      constant.STRING_CONSTANTS.SUCCESS,
+      orderData,
       res,
       null
     );

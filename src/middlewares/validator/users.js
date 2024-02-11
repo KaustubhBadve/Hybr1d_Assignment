@@ -11,11 +11,11 @@ const Errors = {
       .isLength({ min: 10, max: 10 }),
     check(
       "password",
-      "Password should not be empty and length must be 6 to 10 digits"
+      "Password should not be empty and length must be 6 to 15 digits"
     )
       .isString()
       .notEmpty()
-      .isLength({ min: 6, max: 10 }),
+      .isLength({ min: 6, max: 15 }),
     check("email", "email should be valid and not empty")
       .optional()
       .isEmail()
@@ -37,7 +37,7 @@ const Errors = {
     )
       .isString()
       .notEmpty()
-      .isLength({ min: 6, max: 10 }),
+      .isLength({ min: 6, max: 16 }),
   ],
 };
 module.exports = Errors;

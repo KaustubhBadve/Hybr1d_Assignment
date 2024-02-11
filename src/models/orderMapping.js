@@ -22,7 +22,8 @@ module.exports = (sequelize, DataType) => {
         type: DataType.BIGINT,
         allowNull: true
       }
-    }
+    },
+    { timestamps: false }
   );
 
   return OrderMappingMaster;

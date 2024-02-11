@@ -10,4 +10,10 @@ router.post(
   users.createNewCatalog
 );
 
+router.get(
+    "/seller/orders",
+    validateToken("Seller"),
+    users.fetchOrdersForBuyers
+  );
+
 module.exports = router;

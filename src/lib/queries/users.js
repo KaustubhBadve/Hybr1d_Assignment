@@ -34,8 +34,15 @@ getUsersList = async function (role) {
   });
 };
 
+getUserByIdForBuyer = async function (id) {
+  const user = await db[constants.DB.table.USERS_MASTER].findOne({
+    where: { isDeleted: 0, id, role:"Seller"},
+  });
+  return user ? user.dataValues : null;
+};
+
 getUserById = async function (id) {
-	return await db[constants.DB.table.USERS_MASTER].findByPk(id);
+  return await db[constants.DB.table.USERS_MASTER].findByPk(id);
 };
 
 module.exports = {
@@ -44,5 +51,6 @@ module.exports = {
   deleteUser,
   getUserByMobileNo,
   getUsersList,
-  getUserById
+  getUserById,
+  getUserByIdForBuyer
 };
