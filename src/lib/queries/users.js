@@ -27,9 +27,17 @@ getUserByMobileNo = async function (mobileNo) {
   return user ? user.dataValues : null;
 };
 
+getUsersList = async function (role) {
+  return await db[constants.DB.table.USERS_MASTER].findAll({
+    where: { isDeleted: 0, role},
+    attributes: ["id", "name", "mobileNo", "email"],
+  });
+};
+
 module.exports = {
   createUser,
   updateUser,
   deleteUser,
   getUserByMobileNo,
+  getUsersList
 };

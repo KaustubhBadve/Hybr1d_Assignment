@@ -25,7 +25,6 @@ module.exports = Object.freeze({
 		INTERNAL_SERVER_ERROR: 500,
 	},
 	jwt: {
-		SECRET: "secretfortoken",
 		EXPIRE_BUYER: 172800,
 		EXPIRE_SELLER: 432000,
 	},
@@ -37,4 +36,5 @@ module.exports = Object.freeze({
 			"Endpoint not found at server",
 		INVALID_AUTHORIZATION: "Unauthorized Request",
 	},
+	USER:["Seller","Buyer"]
 });

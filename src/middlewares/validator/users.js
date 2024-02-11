@@ -1,4 +1,5 @@
 const { check } = require("express-validator");
+const constants = require("../../constants/constants");
 
 const Errors = {
   USER_REGISTRATION: [
@@ -19,6 +20,9 @@ const Errors = {
       .optional()
       .isEmail()
       .notEmpty(),
+      check("role", "Role should be either Seller or Buyer")
+      .notEmpty()
+      .isIn(constants.USER),
   ],
   USER_LOGIN: [
     check("userName", "userName should not be empty").notEmpty(),
