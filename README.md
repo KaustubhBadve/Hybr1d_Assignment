@@ -11,7 +11,7 @@ This assignment is entirely backend-focused, leveraging robust frameworks, JS-li
 <li>Registered users can securely log in to their accounts, ensuring a safe and personalized experience through tokens.</li>
 <li>JWT tokens are generated upon successful login for both authentication and authorization purposes.</li>
 <br>
-<ul>Sellers Features</ul>
+<ul>Seller Features</ul>
 <li>Sellers have the capability to create catalogs of items.</li>
 <li>Each item featured in the catalog is characterized by its name, price, and optional details such as item description, category, cover image, etc., empowering sellers to proficiently showcase their products to prospective buyers.</li>
 <li>Sellers have access to a list of orders they have received.</li>
