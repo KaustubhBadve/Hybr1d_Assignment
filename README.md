@@ -24,7 +24,7 @@ This assignment is entirely backend-focused, leveraging robust frameworks, JS-li
 # Access Postman Collection
 
 <ul>Detailed API documentation is accessible through Postman. Simply import the following URL into Postman to gain access to the Postman collection for this assignment:</ul>
-<li><a href="https://api.postman.com/collections/24650675-55175de9-b383-42da-b2a9-ee223134fa86?access_key=PMAT-01HPCEB1R0PQPHXKQ9HC42DMAW">Postman Collection URL</a></li>
+<li><a href="https://api.postman.com/collections/20520271-294e56e6-2bf9-4fa6-9dd5-8263b54bde8d?access_key=PMAT-01HPCVRJVKNCNK1QQEN6HAEEG3">Postman Collection URL</a></li>
 
 
 # API Documentation
