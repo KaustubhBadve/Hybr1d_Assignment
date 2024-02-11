@@ -11,7 +11,15 @@ updateCatalog = async function (obj, query) {
   });
 };
 
+getCatalogsList = async function (sellerId) {
+  return await db[constants.DB.table.CATALOG_MASTER].findAll({
+    where: { isActive: 1, sellerId},
+    attributes: ["id", "itemName", "price", "currency", "description","coverImage"],
+  });
+};
+
 module.exports = {
   createCatalog,
-  updateCatalog
+  updateCatalog,
+  getCatalogsList
 };

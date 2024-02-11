@@ -285,3 +285,65 @@ exports.createNewCatalog = async (req, res) => {
     );
   }
 };
+
+exports.getListOfItems = async (req, res) => {
+  try {
+    let userId = req?.params?.id;
+
+    let errors = await validationResult(req);
+    if (!errors.isEmpty()) {
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    let user = await query.getUserById(userId);
+
+    if (!user) {
+      errors.errors.push({
+        msg: `User not found with userId: ${userId}`,
+      });
+      return response.sendResponse(
+        constant.response_code.NOT_FOUND,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    let listOfItems = await catalogQuery.getCatalogsList(userId);
+
+    if (!listOfItems.length) {
+      errors.errors.push({
+        msg: `As of now no items has been posted by seller`,
+      });
+      return response.sendResponse(
+        constant.response_code.NOT_FOUND,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    return response.sendResponse(
+      constant.response_code.SUCCESS,
+      constant.STRING_CONSTANTS.SUCCESS,
+      listOfItems,
+      res,
+      null
+    );
+  } catch (err) {
+    return response.sendResponse(
+      constant.response_code.INTERNAL_SERVER_ERROR,
+      err.message || constant.STRING_CONSTANTS.SOME_ERROR_OCCURED,
+      null,
+      res
+    );
+  }
+};

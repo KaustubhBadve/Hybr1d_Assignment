@@ -1,4 +1,4 @@
-const { check } = require("express-validator");
+const { check, param } = require("express-validator");
 
 const Errors = {
   CATALOG_ADD: [
@@ -18,6 +18,9 @@ const Errors = {
       .isString()
       .optional()
       .notEmpty(),
+  ],
+  RETRIEVE_CATALOG_DETAILS: [
+    param("id", "Seller id is required").notEmpty().isNumeric()
   ],
 };
 module.exports = Errors;

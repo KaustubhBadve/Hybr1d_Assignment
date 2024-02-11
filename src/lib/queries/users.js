@@ -34,10 +34,15 @@ getUsersList = async function (role) {
   });
 };
 
+getUserById = async function (id) {
+	return await db[constants.DB.table.USERS_MASTER].findByPk(id);
+};
+
 module.exports = {
   createUser,
   updateUser,
   deleteUser,
   getUserByMobileNo,
-  getUsersList
+  getUsersList,
+  getUserById
 };
