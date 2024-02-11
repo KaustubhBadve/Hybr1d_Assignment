@@ -2,7 +2,9 @@ module.exports = Object.freeze({
 	DB: {
 		table: {
 			USERS_MASTER: "usersmaster",
-			CATALOG_MASTER: "catalogmaster"
+			CATALOG_MASTER: "catalogmaster",
+			ORDER_MASTER: "ordermaster",
+			ORDER_MAPPING_MASTER: "ordermappingmaster"
 		},
 	},
 	response_code: {
