@@ -17,10 +17,7 @@ module.exports = (sequelize, DataType) => {
       email: {
         type: DataType.STRING,
         allowNull: true,
-        unique: {
-          args: true,
-          msg: "Email Id can't be duplicate!",
-        },
+        unique: true
       },
       emailVerified: {
         type: DataType.INTEGER,
@@ -29,10 +26,7 @@ module.exports = (sequelize, DataType) => {
       mobileNo: {
         type: DataType.BIGINT,
         allowNull: false,
-        unique: {
-          args: true,
-          msg: "Mobile number can't be duplicate!",
-        },
+        unique: true
       },
       password: {
         type: DataType.STRING,

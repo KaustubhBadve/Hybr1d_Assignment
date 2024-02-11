@@ -11,6 +11,7 @@ const jwt = require("jsonwebtoken");
 var passwordValidator = require("password-validator");
 const db = require("../models");
 
+// Password Validator
 const passswordValidate = (password) => {
   const schema = new passwordValidator();
   schema
@@ -24,6 +25,7 @@ const passswordValidate = (password) => {
   return schema.validate(password);
 };
 
+// User Registration through username, mobileNo and password
 exports.userRegistration = async (req, res) => {
   try {
     let errors = await validationResult(req);
@@ -95,6 +97,7 @@ exports.userRegistration = async (req, res) => {
   }
 };
 
+// user login through username, mobileNo and password
 exports.userLogin = async (req, res) => {
   try {
     let errors = await validationResult(req);
@@ -177,6 +180,7 @@ exports.userLogin = async (req, res) => {
   }
 };
 
+// Function to generate JWT token
 const genNewToken = async (payload, res) => {
   try {
     var token = jwt.sign(payload, process.env.jwtsecret, {
@@ -194,6 +198,7 @@ const genNewToken = async (payload, res) => {
   }
 };
 
+// Function to fetch all active Seller list
 exports.sellerList = async (req, res) => {
   try {
     let errors = await validationResult(req);
@@ -239,6 +244,7 @@ exports.sellerList = async (req, res) => {
   }
 };
 
+// Function to create new catalog by sellers
 exports.createNewCatalog = async (req, res) => {
   try {
     let userId = req?.user?.id;
@@ -280,6 +286,7 @@ exports.createNewCatalog = async (req, res) => {
   }
 };
 
+// Function to fetch all available products against specific seller
 exports.getListOfItems = async (req, res) => {
   try {
     let userId = req?.params?.id;
@@ -342,6 +349,7 @@ exports.getListOfItems = async (req, res) => {
   }
 };
 
+// Function to create order 
 exports.createOrder = async (req, res) => {
   try {
     let userId = req?.user?.id;
@@ -453,6 +461,7 @@ exports.createOrder = async (req, res) => {
   }
 };
 
+// Function to fetch all orders associated with seller
 exports.fetchOrdersForBuyers = async (req, res) => {
   try {
     let userId = req?.user?.id;
@@ -495,36 +504,22 @@ exports.fetchOrdersForBuyers = async (req, res) => {
     orderData=orderData?.length ? orderData[0]?.data : null;
 
     if(!orderData){
-      errors.errors.push({
-        msg: `Currently no order available`,
-      });
-      return response.sendResponse(
-        constant.response_code.BAD_REQUEST,
-        null,
+     return response.sendResponse(
+        constant.response_code.SUCCESS,
+        "Currently no order available",
         null,
         res,
-        errors
+        null
       );
     }
 
-    response.sendResponse(
+   return response.sendResponse(
       constant.response_code.SUCCESS,
       constant.STRING_CONSTANTS.SUCCESS,
       orderData,
       res,
       null
     );
-    const orderId = createOrder?.id;
-    const orderMappings = Object.keys(orderList).map((itemId) => {
-      return {
-        orderId,
-        itemId,
-        quantity: orderList[itemId],
-      };
-    });
-
-    orderMapQuery.createOrderMappingBulk(orderMappings);
-    return;
   } catch (err) {
     return response.sendResponse(
       constant.response_code.INTERNAL_SERVER_ERROR,

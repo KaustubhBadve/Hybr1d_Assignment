@@ -6,10 +6,6 @@ async function getErrorMessage(errCode) {
 			resMessage = "Invalid Access Token!";
 			break;
 
-		case constants.response_code.INVALID_ID:
-			resMessage = "Invalid user";
-			break;
-
 		case constants.response_code.UNAUTHORIZED:
 			resMessage = "You are not authorized!";
 			break;
@@ -18,16 +14,8 @@ async function getErrorMessage(errCode) {
 			resMessage = "This action is forbidden for you!";
 			break;
 
-		case constants.response_code.ROLE_BREACH:
-			resMessage = "You are not authorize to perform this action!";
-			break;
-
 		case constants.response_code.NOT_FOUND:
 			resMessage = "Data not found";
-			break;
-
-		case constants.response_code.EMPTY_REQ:
-			resMessage = "Empty data set cannot be processed";
 			break;
 
 		default:

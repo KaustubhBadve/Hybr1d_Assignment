@@ -4,7 +4,10 @@ const constants = require("../../constants/constants");
 const Errors = {
   USER_REGISTRATION: [
     check("userName", "userName should not be empty").notEmpty(),
-    check("mobileNo", "Mobile Number should be numeric and length must be 10 digit")
+    check(
+      "mobileNo",
+      "Mobile Number should be numeric and length must be 10 digit"
+    )
       .isNumeric()
       .isInt({ gt: 999999999 })
       .notEmpty()
@@ -20,7 +23,7 @@ const Errors = {
       .optional()
       .isEmail()
       .notEmpty(),
-      check("role", "Role should be either Seller or Buyer")
+    check("role", "Role should be either Seller or Buyer")
       .notEmpty()
       .isIn(constants.USER),
   ],
@@ -31,10 +34,7 @@ const Errors = {
       .isInt({ gt: 999999999 })
       .notEmpty()
       .isLength({ min: 10, max: 10 }),
-    check(
-      "password",
-      "Please enter the valid password"
-    )
+    check("password", "Please enter the valid password")
       .isString()
       .notEmpty()
       .isLength({ min: 6, max: 16 }),

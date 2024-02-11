@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start:watch": "PORT=3018 NODE_ENV=development nodemon $NODE_DEBUG_OPTION ./bin/index.js"
+    "start:watch": "nodemon ./bin/index.js"
   },
   "keywords": [],
   "author": "",
