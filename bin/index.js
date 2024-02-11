@@ -9,7 +9,7 @@ app.use("/api", routes);
 const port = process.env.PORT || "3018";
 app.set("port", port);
 
-// db.sequelize.sync({ force: false, alter: false });
+// db.sequelize.sync({ force: false, alter: true });
 
 const server = app.listen(port);
 

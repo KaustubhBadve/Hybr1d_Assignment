@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 const response = require("../lib/response");
 const constant = require("../constants/constants");
 const query = require("../lib/queries/users");
+const catalogQuery = require("../lib/queries/catalogs");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var passwordValidator = require("password-validator");
@@ -152,11 +153,13 @@ exports.userLogin = async (req, res) => {
       name: user?.name,
       mobileNo: user?.mobileNo,
       role: user?.role,
+      id: user?.id,
     };
 
     token = await genNewToken(userDataForToken, res);
 
     let userInfo = {
+      id: user?.id,
       name: user?.name,
       mobileNo: user?.mobileNo,
       role: user?.role,
@@ -229,6 +232,47 @@ exports.sellerList = async (req, res) => {
       constant.response_code.SUCCESS,
       constant.STRING_CONSTANTS.SUCCESS,
       userList,
+      res,
+      null
+    );
+  } catch (err) {
+    return response.sendResponse(
+      constant.response_code.INTERNAL_SERVER_ERROR,
+      err.message || constant.STRING_CONSTANTS.SOME_ERROR_OCCURED,
+      null,
+      res
+    );
+  }
+};
+
+exports.createNewCatalog = async (req, res) => {
+  try {
+    let userId = req?.user?.id;
+
+    let errors = await validationResult(req);
+    if (!errors.isEmpty()) {
+      return response.sendResponse(
+        constant.response_code.BAD_REQUEST,
+        null,
+        null,
+        res,
+        errors
+      );
+    }
+
+    let body = req.body;
+
+    body = {
+      ...body,
+      sellerId: userId,
+    };
+
+    catalogQuery.createCatalog(body);
+
+    return response.sendResponse(
+      constant.response_code.SUCCESS,
+      "Item added succesfully",
+      null,
       res,
       null
     );

@@ -18,6 +18,11 @@ module.exports = (sequelize, DataType) => {
         type: DataType.BIGINT,
         allowNull: false
       },
+      currency: {
+        type: DataType.STRING,
+        allowNull: true,
+        defaultValue: 'INR',
+      },
       category: {
         type: DataType.STRING,
         allowNull: true

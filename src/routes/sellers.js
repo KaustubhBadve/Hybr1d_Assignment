@@ -1,5 +1,13 @@
 var router = require("express").Router();
+const users = require("../controllers/users");
+const validateToken = require("../middlewares/authorization");
+const errors = require("../middlewares/validator/catalogs");
 
-// router.put("/user/update/:id", authorization, errors.PUT, users.update);
+router.post(
+  "/seller/newcatalog",
+  validateToken("Seller"),
+  errors.CATALOG_ADD,
+  users.createNewCatalog
+);
 
 module.exports = router;

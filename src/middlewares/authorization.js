@@ -25,6 +25,7 @@ const validateToken = (role) => (req, res, next) => {
             null
           );
         }
+        req.user = decoded;
         return next();
       }
     });
