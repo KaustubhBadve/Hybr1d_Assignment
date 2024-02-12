@@ -5,7 +5,7 @@ const errors = require("../middlewares/validator/catalogs");
 
 // to create new catalog
 router.post(
-  "/seller/newcatalog",
+  "/seller/create-catalog",
   validateToken("Seller"),
   errors.CATALOG_ADD,
   users.createNewCatalog

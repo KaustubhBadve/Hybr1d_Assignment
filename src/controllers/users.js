@@ -289,7 +289,7 @@ exports.createNewCatalog = async (req, res) => {
 // Function to fetch all available products against specific seller
 exports.getListOfItems = async (req, res) => {
   try {
-    let userId = req?.params?.id;
+    let userId = req?.params?.seller_id;
 
     let errors = await validationResult(req);
     if (!errors.isEmpty()) {

@@ -20,7 +20,7 @@ const Errors = {
       .notEmpty(),
   ],
   RETRIEVE_CATALOG_DETAILS: [
-    param("id", "Seller id is required").notEmpty().isNumeric(),
+    param("seller_id", "Seller id is required").notEmpty().isNumeric(),
   ],
 };
 module.exports = Errors;

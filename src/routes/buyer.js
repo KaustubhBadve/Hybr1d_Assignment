@@ -4,11 +4,11 @@ const validateToken = require("../middlewares/authorization");
 const errors = require("../middlewares/validator/catalogs");
 
 // to get all sellerlist
-router.get("/buyer/sellerlist", validateToken("Buyer"), users.sellerList);
+router.get("/buyer/list-of-sellers", validateToken("Buyer"), users.sellerList);
 
 // to get item list associated with seller
 router.get(
-  "/buyer/itemList/:id",
+  "/buyer/seller-catalog/:seller_id",
   validateToken("Buyer"),
   errors.RETRIEVE_CATALOG_DETAILS,
   users.getListOfItems
@@ -16,7 +16,7 @@ router.get(
 
 // to create order
 router.post(
-    "/buyer/orderlist",
+    "/buyer/create-order/",
     validateToken("Buyer"),
     users.createOrder
   );
